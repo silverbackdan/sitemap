@@ -64,8 +64,16 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
     const path = u._path?.pathname || u.loc
 
     // Early continue for robots blocked paths
-    if (!getPathRobotConfig(event, { path, skipSiteIndexable: true }).indexable)
-      continue
+    if (!getPathRobotConfig(event, { path, skipSiteIndexable: true }).indexable) {
+      // eslint-disable-next-line no-console
+      console.log(' will exclude from sitemap i future', getPathRobotConfig(event, {
+        path,
+        skipSiteIndexable: true,
+      }), event, { path, skipSiteIndexable: true })
+      // eslint-disable-next-line no-console
+      console.log('nitro._robots.ctx ... ', nitro._robots.ctx)
+      // continue
+    }
 
     let routeRules = routeRuleMatcher(path)
 
