@@ -165,7 +165,8 @@ export default defineNuxtConfig({
         includeAppSources: true,
         sources: [
           '/api/sitemap-foo',
-          'https://example.com/invalid.json',
+          '/api/sitemap-500',
+          // 'https://example.com/invalid.json',
         ],
         exclude: ['/en/blog/**', '/fr/blog/**', '/blog/**', /.*hide-me.*/g],
         urls: [

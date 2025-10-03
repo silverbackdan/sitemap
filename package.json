@@ -82,8 +82,7 @@
     "sirv": "^3.0.2",
     "std-env": "^3.9.0",
     "ufo": "^1.6.1",
-    "ultrahtml": "^1.6.0",
-    "vue-i18n-routing": "^1.2.0"
+    "ultrahtml": "^1.6.0"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
@@ -105,6 +104,7 @@
     "nuxt-i18n-micro": "^1.95.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
+    "vue-i18n-routing": "^1.2.0",
     "vue-tsc": "^3.0.7"
   },
   "pnpm": {

@@ -61,7 +61,11 @@ export function getSitemapConfig(
   sitemaps: ModuleRuntimeConfig['sitemaps'],
   defaultChunkSize: number = 1000,
 ): SitemapDefinition {
+  // eslint-disable-next-line no-console
+  console.log(`getSitemapConfig for name ${sitemapName}`)
   const chunkInfo = parseChunkInfo(sitemapName, sitemaps, defaultChunkSize)
+  // eslint-disable-next-line no-console
+  console.log(`chunkInfo`, chunkInfo)
 
   if (chunkInfo.isChunked) {
     // For auto-chunked sitemaps
