@@ -54,8 +54,6 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
     }
   }
   const { urls: sitemapUrls, failedSources } = await buildSitemapUrls(definition, resolvers, runtimeConfig, nitro)
-  // eslint-disable-next-line no-console
-  console.log('sitemapUrls', sitemapUrls)
   const routeRuleMatcher = createNitroRouteRuleMatcher()
   const { autoI18n } = runtimeConfig
 
@@ -141,6 +139,8 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
         urls: failedSources.map(f => f.url),
       }
     : undefined
+  // eslint-disable-next-line no-console
+  console.log('-- urlsToXml --', urls)
   const sitemap = urlsToXml(urls, resolvers, runtimeConfig, errorInfo)
 
   const ctx = { sitemap, sitemapName, event }

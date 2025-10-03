@@ -7,8 +7,6 @@ import { parseChunkInfo, getSitemapConfig } from '../../sitemap/utils/chunk'
 export default defineEventHandler(async (e) => {
   const runtimeConfig = useSitemapRuntimeConfig(e)
   const { sitemaps } = runtimeConfig
-  // eslint-disable-next-line no-console
-  console.log('Sitemap event handler, all sitemaps', sitemaps)
 
   // Extract the sitemap name from the path
   let sitemapName = getRouterParam(e, 'sitemap')
@@ -69,7 +67,5 @@ export default defineEventHandler(async (e) => {
 
   // Get the appropriate sitemap configuration
   const sitemapConfig = getSitemapConfig(sitemapName, sitemaps, runtimeConfig.defaultSitemapsChunkSize || 1000)
-  // eslint-disable-next-line no-console
-  console.log('sitemapConfig', e.path, sitemapConfig)
   return createSitemap(e, sitemapConfig, runtimeConfig)
 })
