@@ -65,6 +65,9 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
   for (const u of sitemapUrls) {
     const path = u._path?.pathname || u.loc
 
+    // eslint-disable-next-line no-console
+    console.log(`getPathRobotConfig for ${path}`, path, getPathRobotConfig(event, { path, skipSiteIndexable: true }))
+
     // Early continue for robots blocked paths
     if (!getPathRobotConfig(event, { path, skipSiteIndexable: true }).indexable)
       continue
@@ -79,6 +82,9 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
         routeRules = defu(routeRules, routeRuleMatcher(pathWithoutPrefix))
     }
 
+    // eslint-disable-next-line no-console
+    console.log(`routeRules for ${path}`, routeRules)
+
     // Skip invalid entries
     if (routeRules.sitemap === false)
       continue
@@ -88,6 +94,9 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
 
     const hasRobotsDisabled = Object.entries(routeRules.headers || {})
       .some(([name, value]) => name.toLowerCase() === 'x-robots-tag' && value.toLowerCase().includes('noindex'))
+
+    // eslint-disable-next-line no-console
+    console.log(`hasRobotsDisabled for ${path}`, hasRobotsDisabled)
 
     if (routeRules.redirect || hasRobotsDisabled)
       continue
@@ -99,9 +108,6 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
   // Truncate array to valid entries only
   sitemapUrls.length = validCount
 
-  // eslint-disable-next-line no-console
-  console.log('#2 valid count', validCount, sitemapUrls)
-
   // 6. nitro hooks
   const locSize = sitemapUrls.length
   const resolvedCtx: SitemapRenderCtx = {
@@ -109,7 +115,7 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
     sitemapName: sitemapName,
     event,
   }
-  // todo: note here is that the resolvedCtx is still all good, something happens between the 2 hook points
+
   await nitro.hooks.callHook('sitemap:resolved', resolvedCtx)
   // we need to normalize any new urls otherwise they won't appear in the final sitemap
   // Note this is risky and users should be using the sitemap:input hook for additions
