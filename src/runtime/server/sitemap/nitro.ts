@@ -103,17 +103,32 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
     sitemapName: sitemapName,
     event,
   }
+  // todo: note here is that the resolvedCtx is still all good, something happens between the 2 hook points
   await nitro.hooks.callHook('sitemap:resolved', resolvedCtx)
   // we need to normalize any new urls otherwise they won't appear in the final sitemap
   // Note this is risky and users should be using the sitemap:input hook for additions
+
+  // eslint-disable-next-line no-console
+  console.log('#1 resolved...', resolvedCtx.urls, 'locSize', locSize)
+
   if (resolvedCtx.urls.length !== locSize) {
     resolvedCtx.urls = resolvedCtx.urls.map(e => preNormalizeEntry(e, resolvers))
   }
 
   const maybeSort = (urls: ResolvedSitemapUrl[]) => runtimeConfig.sortEntries ? sortInPlace(urls) : urls
-  // final urls
+
+  // eslint-disable-next-line no-console
+  console.log('#2 before normalized', resolvedCtx.urls)
   const normalizedPreDedupe = resolvedCtx.urls.map(e => normaliseEntry(e, definition.defaults, resolvers))
-  const urls = maybeSort(mergeOnKey(normalizedPreDedupe, '_key').map(e => normaliseEntry(e, definition.defaults, resolvers)))
+
+  // eslint-disable-next-line no-console
+  console.log('#3 normalizedPreDedupe', normalizedPreDedupe)
+  const urls = maybeSort(
+    mergeOnKey(normalizedPreDedupe, '_key').map(e => normaliseEntry(e, definition.defaults, resolvers))
+  )
+
+  // eslint-disable-next-line no-console
+  console.log('-- FINAL urls deduped --', urls)
 
   // Check if this is a chunk request that would be empty
   if (definition._isChunking && definition.sitemapName.includes('-')) {
@@ -139,8 +154,7 @@ async function buildSitemapXml(event: H3Event, definition: SitemapDefinition, re
         urls: failedSources.map(f => f.url),
       }
     : undefined
-  // eslint-disable-next-line no-console
-  console.log('-- urlsToXml --', urls)
+
   const sitemap = urlsToXml(urls, resolvers, runtimeConfig, errorInfo)
 
   const ctx = { sitemap, sitemapName, event }
